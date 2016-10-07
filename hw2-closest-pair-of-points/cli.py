@@ -7,11 +7,22 @@ class Cli:
         parser = argparse.ArgumentParser(
             description='Find out the closest pair of points')
         parser.add_argument(
-            "-i",
-            "--interactive",
-            help=(
-                "plot the points in the end. "
-                "if -f or -g is not specified, let user input data from gui"),
+            "--brutal",
+            help="add brutal force solution",
+            action="store_true")
+        parser.add_argument(
+            "--nlogn",
+            help="add nlogn solution, this would be the default method",
+            action="store_true")
+        parser.add_argument(
+            "-s",
+            "--show",
+            help="plot the points in the end",
+            action="store_true")
+        parser.add_argument(
+            "-e",
+            "--edit",
+            help="edit the points in the gui",
             action="store_true")
         parser.add_argument(
             "-r",
@@ -26,7 +37,7 @@ class Cli:
             metavar="N",
             type=int,
             nargs=1,
-            help="generate N points, must also specify -w, conflict with -r")
+            help="generate N points, conflict with -r")
         parser.add_argument(
             "-w",
             "--write",
@@ -34,26 +45,40 @@ class Cli:
             type=str,
             nargs=1,
             help="write points to file, useful with -g")
+        parser.add_argument(
+            "-t",
+            "--test",
+            metavar="T",
+            type=int,
+            nargs=1,
+            help="do N tests, instead of normal run")
         self.parser = parser
-        self.interactive = None
+        self.brutal = None
+        self.nlogn = None
+        self.show = None
+        self.edit = None
         self.read = None
         self.generate = None
         self.write = None
+        self.test = None
 
     def parse(self):
         args = self.parser.parse_args()
-        self.__set(args, "interactive")
+        self.__set(args, "show")
+        self.__set(args, "edit")
         self.__set0(args, "read")
         self.__set0(args, "generate")
         self.__set0(args, "write")
-        if not self.read and not self.generate and not self.interactive:
-            self.interactive = True
+        self.__set0(args, "test")
+        self.__set(args, "brutal")
+        self.__set(args, "nlogn")
+        if not self.read and not self.generate and not self.edit:
+            self.edit = True
         if self.read and self.generate:
             self.parser.print_help()
             raise ArgumentError("-r and -g conflicts")
-        if self.generate and not self.write:
-            self.parser.print_help()
-            raise ArgumentError("-w is also needed when -g is specified")
+        if not self.brutal and not self.nlogn:
+            self.nlogn = True
         return self
 
     def __set0(self, args, name):
@@ -66,8 +91,10 @@ class Cli:
         setattr(self, name, attr)
 
     def __str__(self):
-        return "interactive=%s, read=%s, write=%s, generate=%s" % (
-            self.interactive, self.read, self.write, self.generate)
+        return ("show=%s, edit=%s, read=%s, write=%s, generate=%s, "
+                "brutal=%s, nlogn=%s") % (
+                    self.show, self.edit, self.read, self.write, self.generate,
+                    self.brutal, self.nlogn)
 
 
 cli = Cli()
