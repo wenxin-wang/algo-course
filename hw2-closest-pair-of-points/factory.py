@@ -25,18 +25,38 @@ class Factory:
             self.show_result("NlogN",  self._solve(NlogN(self.get_points())))
         plt.show()
 
-    def test(self, N):
-        errs = 0
+
+    def test(self):
+        N = self.cli.test
         t0 = 0
         t1 = 0
+        if self.cli.brutal:
+            for i in range(0, N):
+                _ , dt0 = self._solve(Brutal(self.get_points()))
+                t0 += dt0
+            print("Brutal Force: %f" % (t0 / N))
+        if self.cli.nlogn:
+            for i in range(0, N):
+                _ , dt1 = self._solve(NlogN(self.get_points()))
+                t1 += dt1
+            print("NlogN: %f" % (t1 / N))
+        return t0 / N, t1 / N
+
+
+    def compare(self):
+        N = self.cli.compare
+        t0 = 0
+        t1 = 0
+        err = 0
         for i in range(0, N):
             (_, d0), dt0 = self._solve(Brutal(self.get_points()))
-            (_, d1), dt1 = self._solve(NlogN(self.get_points()))
             t0 += dt0
+            (_, d1), dt1 = self._solve(NlogN(self.get_points()))
             t1 += dt1
             if d0 != d1:
-                errs += 1
-        return errs, t0 - t1
+                err += 1
+        print("Errors: %d\nBrutal Force: %f\nNlogN: %f" % (err, t0 / N, t1 / N))
+        return t0 / N, t1 / N
 
     def _solve(self, sol):
         start = time.clock()

@@ -7,14 +7,6 @@ class Cli:
         parser = argparse.ArgumentParser(
             description='Find out the closest pair of points')
         parser.add_argument(
-            "--brutal",
-            help="add brutal force solution",
-            action="store_true")
-        parser.add_argument(
-            "--nlogn",
-            help="add nlogn solution, this would be the default method",
-            action="store_true")
-        parser.add_argument(
             "-s",
             "--show",
             help="plot the points in the end",
@@ -51,7 +43,22 @@ class Cli:
             metavar="T",
             type=int,
             nargs=1,
-            help="do N tests, instead of normal run")
+            help="do N tests, instead of normal run, output mean")
+        parser.add_argument(
+            "-c",
+            "--compare",
+            metavar="T",
+            type=int,
+            nargs=1,
+            help="do N tests, compare results, imply --brutal and --nlogn")
+        parser.add_argument(
+            "--brutal",
+            help="add brutal force solution",
+            action="store_true")
+        parser.add_argument(
+            "--nlogn",
+            help="add nlogn solution, this would be the default method",
+            action="store_true")
         self.parser = parser
         self.brutal = None
         self.nlogn = None
@@ -61,6 +68,7 @@ class Cli:
         self.generate = None
         self.write = None
         self.test = None
+        self.compare = None
 
     def parse(self):
         args = self.parser.parse_args()
@@ -70,6 +78,7 @@ class Cli:
         self.__set0(args, "generate")
         self.__set0(args, "write")
         self.__set0(args, "test")
+        self.__set0(args, "compare")
         self.__set(args, "brutal")
         self.__set(args, "nlogn")
         if not self.read and not self.generate and not self.edit:
