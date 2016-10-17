@@ -1,3 +1,4 @@
+#include "common.hh"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -51,7 +52,7 @@ int write_file(vector<uint32_t> &v, char *name) {
     return 0;
 }
 
-void test(void (*f)(vector<uint32_t> &), int argc, char** argv) {
+void test(void (*f)(VITER l, VITER r), int argc, char** argv) {
     if (argc < 3) {
         cerr << "input file is needed" << endl;
         usage(argv);
@@ -65,7 +66,7 @@ void test(void (*f)(vector<uint32_t> &), int argc, char** argv) {
         exit(1);
     }
     clock_t start = clock();
-    f(v);
+    f(v.begin(), v.end());
     cout << clock() - start << endl;
     if (argc > 3) {
         if (write_file(v, argv[3])) {

@@ -1,5 +1,5 @@
-#include "test.hh"
-#include "sorts.hh"
+#include "lib/test.hh"
+#include "lib/insertion.hh"
 
 using namespace std;
 

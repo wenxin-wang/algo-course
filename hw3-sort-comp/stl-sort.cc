@@ -1,9 +1,10 @@
-#include "test.hh"
-#include "sorts.hh"
+#include "lib/test.hh"
+#include "lib/stl-sort.hh"
 
 using namespace std;
 
 int main(int argc, char** argv) {
-    test(StlSort::sort, argc, argv);
+    void (*f)(VITER, VITER) = &StlSort::sort<VITER>;
+    test(f, argc, argv);
     return 0;
 }

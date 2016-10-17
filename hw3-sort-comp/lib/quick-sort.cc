@@ -1,40 +1,6 @@
 #include <vector>
 #include <cstdint>
-#include <algorithm>
 #include <random>
-#include <iostream>
-
-template < class T >
-inline std::ostream& operator << (std::ostream& os, const std::vector<T>& v)
-{
-    for (auto ii = v.begin(); ii != v.end(); ii++)
-    {
-        os << *ii << std::endl;
-    }
-    return os;
-}
-
-namespace StlSort {
-    void sort(std::vector<uint32_t> &v) {
-        std::sort(v.begin(), v.end());
-    }
-}
-
-namespace Insertion {
-    void sort(std::vector<uint32_t> &v) {
-        unsigned n = v.size();
-        for (unsigned i = 1; i < n; i++) {
-            for (unsigned j = i; j > 0; j--) {
-                if (v[j-1] > v[j]) {
-                    auto t = v[j];
-                    v[j] = v[j-1];
-                    v[j-1] = t;
-                }
-                else break;
-            }
-        }
-    }
-}
 
 namespace QuickSort {
     std::random_device rd;
