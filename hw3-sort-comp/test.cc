@@ -7,16 +7,6 @@
 
 using namespace std;
 
-template < class T >
-inline std::ostream& operator << (std::ostream& os, const std::vector<T>& v)
-{
-    for (auto ii = v.begin(); ii != v.end(); ii++)
-    {
-        os << *ii << endl;
-    }
-    return os;
-}
-
 void usage(char **argv) {
     cerr << argv[0] << "N input [output]"<< endl;
     cerr << "N: size of uint32 list to be sorted"<< endl;

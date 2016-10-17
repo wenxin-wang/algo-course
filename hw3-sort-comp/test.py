@@ -8,6 +8,7 @@ import pandas as pd
 from subprocess import check_output
 import filecmp
 import sys
+import os
 
 
 def gen(N, name):
@@ -22,7 +23,7 @@ def run(sorts, N, times, out=False):
         gen(N, infile)
         res = [N]
         for s in sorts:
-            cmd = ["./" + s, str(N), infile]
+            cmd = ["../" + s, str(N), infile]
             if out:
                 cmd.append(s + ".txt")
             res.append(int(check_output(cmd)))
@@ -36,9 +37,11 @@ def run(sorts, N, times, out=False):
     return np.vstack(results)
 
 
-sorts = ["stl-sort", "insertion"]
+os.chdir("instance")
+
+sorts = ["stl-sort", "insertion", "quick-sort"]
 times = pd.DataFrame(np.vstack([
-    run(sorts, n, 5, True) for n in
+    run(sorts, n, 10, True) for n in
     #[10]
     [10, 10**2]
     #[10, 10**2, 10**3, 10**4, 10**5, 10**6, 10**7, 10**8, 2*10**8]:

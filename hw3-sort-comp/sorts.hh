@@ -12,4 +12,8 @@ namespace Insertion {
     void sort(std::vector<uint32_t> &l);
 }
 
+namespace QuickSort {
+    void sort(std::vector<uint32_t> &l);
+}
+
 #endif /* SORTS_H */
