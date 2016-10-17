@@ -4,6 +4,6 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-    test(StlSort::sort, argc, argv);
+    test(Insertion::sort, argc, argv);
     return 0;
 }
