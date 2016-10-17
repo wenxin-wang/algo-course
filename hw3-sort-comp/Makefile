@@ -1,4 +1,4 @@
-src = sort-comp.cc
+src = sort-comp.cc stl-sort.cc
 LINK.o = $(CXX) $(LDFLAGS) $(TARGET_ARCH)
 
 default: sort-comp
