@@ -1,18 +1,10 @@
-src = sort-comp.cc stl-sort.cc
 LINK.o = $(CXX) $(LDFLAGS) $(TARGET_ARCH)
 
-default: sort-comp
+default: stl-sort
 
-sort-comp: $(subst .cc,.o,$(src))
+stl-sort: stl-sort.cc test.cc
 
 .PHONY: clean install
 
 clean:
-	rm -f *.o *.d sort-comp
-
-include $(subst .cc,.d,$(src))
-
-%.d: %.cc
-	$(CXX) -M $(CXXFLAGS) $< > $@.$$$$; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-	rm -f $@.$$$$
+	rm -f *.o stl-sort
