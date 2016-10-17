@@ -5,3 +5,13 @@
 __pycache__/
 *.txt
 *-bundle*
+
+GPATH
+GRTAGS
+GTAGS
+.dir-locals.el
+
+.tmp_versions/
+*.o
+*.d
+instance/
