@@ -2,4 +2,4 @@
 #include <cstdint>
 
 
-void test(void (*f)(std::vector<int32_t> &), int argc, char** argv);
+void test(void (*f)(std::vector<uint32_t> &), int argc, char** argv);

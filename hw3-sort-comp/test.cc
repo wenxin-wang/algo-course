@@ -19,18 +19,18 @@ inline std::ostream& operator << (std::ostream& os, const std::vector<T>& v)
 
 void usage(char **argv) {
     cerr << argv[0] << "N input [output]"<< endl;
-    cerr << "N: size of int32 list to be sorted"<< endl;
-    cerr << "input: list of int32, one in each line"<< endl;
-    cerr << "output: sorted list of int32, one in each line"<< endl;
+    cerr << "N: size of uint32 list to be sorted"<< endl;
+    cerr << "input: list of uint32, one in each line"<< endl;
+    cerr << "output: sorted list of uint32, one in each line"<< endl;
 }
 
-int read_file(vector<int32_t> &v, char *name, long int N) {
+int read_file(vector<uint32_t> &v, char *name, long int N) {
     int i = 0;
     string line;
     ifstream in(name);
     if (in.is_open()) {
         while (i < N && getline(in, line)) {
-            v.push_back(stoi(line));
+            v.push_back(stol(line));
             i++;
         }
     }
@@ -47,7 +47,7 @@ int read_file(vector<int32_t> &v, char *name, long int N) {
     return 0;
 }
 
-int write_file(vector<int32_t> &v, char *name) {
+int write_file(vector<uint32_t> &v, char *name) {
     string line;
     ofstream out(name);
     if (out.is_open()) {
@@ -61,14 +61,14 @@ int write_file(vector<int32_t> &v, char *name) {
     return 0;
 }
 
-void test(void (*f)(vector<int32_t> &), int argc, char** argv) {
+void test(void (*f)(vector<uint32_t> &), int argc, char** argv) {
     if (argc < 3) {
         cerr << "input file is needed" << endl;
         usage(argv);
         exit(1);
     }
     long int N = strtol(argv[1], NULL, 10);
-    vector<int32_t> v;
+    vector<uint32_t> v;
     v.reserve(N);
     if (read_file(v, argv[2], N)) {
         usage(argv);
