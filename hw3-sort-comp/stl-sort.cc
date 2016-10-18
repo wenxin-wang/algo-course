@@ -4,7 +4,6 @@
 using namespace std;
 
 int main(int argc, char** argv) {
-    void (*f)(VITER, VITER) = &StlSort::sort<VITER>;
-    test(f, argc, argv);
+    test(StlSort::sort, argc, argv);
     return 0;
 }

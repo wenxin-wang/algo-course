@@ -1,11 +1,9 @@
 #ifndef QUICK_SORT_H
 #define QUICK_SORT_H
 
-#include <vector>
-#include <cstdint>
-
 namespace QuickSort {
-    void sort(std::vector<uint32_t> &v);
+    template <typename RandIter>
+    void sort(const RandIter l, const RandIter r);
 }
 
 #endif /* QUICK_SORT_H */

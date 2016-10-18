@@ -52,7 +52,7 @@ int write_file(vector<uint32_t> &v, char *name) {
     return 0;
 }
 
-void test(void (*f)(VITER l, VITER r), int argc, char** argv) {
+void test(void (*f)(VItr l, VItr r), int argc, char** argv) {
     if (argc < 3) {
         cerr << "input file is needed" << endl;
         usage(argv);

@@ -1,50 +1,45 @@
 #include <vector>
 #include <cstdint>
 #include <random>
+#include <utility>
+#include <utility>
+#include "common.hh"
+#include "insertion.hh"
 
 namespace QuickSort {
+    const unsigned INSERTION_THRES = 100;
     std::random_device rd;
     std::mt19937_64 generator{rd()};
 
-    unsigned select_pivot(const unsigned l, const unsigned r) {
-        std::uniform_int_distribution<unsigned> dist{l, r};
-        return dist(generator);
+    template <typename RandIter>
+    RandIter select_pivot(const RandIter l, const RandIter r) {
+        std::uniform_int_distribution<unsigned> dist{0, r - l - 1};
+        return l + dist(generator);
     }
 
-    void swap(std::vector<uint32_t> &v, const unsigned i, const unsigned j) {
-        if (i == j) return;
-        auto t = v[i];
-        v[i] = v[j];
-        v[j] = t;
-    }
-
-    unsigned partition(std::vector<uint32_t> &v, const unsigned l, const unsigned r) {
-        unsigned split = select_pivot(l, r);
-        const auto piv = v[split];
-        swap(v, l, split);
+    template <typename RandIter>
+    RandIter partition(const RandIter l, const RandIter r) {
+        auto split = select_pivot(l, r);
+        const auto piv = *split;
+        std::swap(*l, *split);
         split = l;
-        for (unsigned i = l + 1; i <= r; i++) {
-            if (v[i] <= piv) {
-                swap(v, ++split, i);
+        for (auto i = l + 1; i < r; i++) {
+            if (*i <= piv) {
+                std::swap(*i, *(++split));
             }
-        }
+        } // max(split) = r - 1
         return split;
     }
 
-    void sort(std::vector<uint32_t> &v, const unsigned l, const unsigned r) {
-        if (l >= r) return;
-        if (r - l == 1) {
-            if (v[r] < v[l]) swap(v, l, r);
-            return;
-        }
-        auto split = partition(v, l, r);
-        sort(v, l, split);
-        sort(v, split + 1, r);
+    template <typename RandIter>
+    void sort(const RandIter l, const RandIter r) {
+        if (l == r || r - l == 1) return;
+        if (r - l <= INSERTION_THRES)
+            return Insertion::sort(l, r);
+        auto split = partition(l, r);
+        sort(l, split + 1);
+        sort(split + 1, r);
     }
 
-    void sort(std::vector<uint32_t> &v) {
-        unsigned n = v.size();
-        if (n < 2) return;
-        sort(v, 0, n - 1);
-    }
+    template void sort<VItr>(const VItr l, const VItr r);
 }
