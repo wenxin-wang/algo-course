@@ -43,8 +43,8 @@ os.chdir("instance")
 sorts = ["stl-sort", "insertion", "quick-sort", "merge-sort"]
 times = pd.DataFrame(np.vstack([
     run(sorts, n, 5, True) for n in
-    [10]
-    #[10, 10**2, 10**3]
+    #[10]
+    [10, 10**2, 10**3, 10**4]
     #[10, 10**2, 10**3, 10**4, 10**5, 10**6, 10**7, 10**8, 2*10**8]:
 ]), columns=(["N"] + sorts))
 

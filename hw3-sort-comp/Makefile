@@ -8,7 +8,7 @@ default: stl-sort insertion quick-sort merge-sort
 stl-sort: lib/stl-sort.o $(LIBS)
 insertion: lib/insertion.o $(LIBS)
 quick-sort: lib/quick-sort.o lib/insertion.o $(LIBS)
-merge-sort: lib/merge.o $(LIBS)
+merge-sort: lib/merge.o lib/insertion.o $(LIBS)
 
 .PHONY: clean install
 
