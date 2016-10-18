@@ -1,8 +1,6 @@
 #include <vector>
 #include <cstdint>
 #include <random>
-#include <utility>
-#include <utility>
 #include "common.hh"
 #include "insertion.hh"
 
@@ -33,7 +31,7 @@ namespace QuickSort {
 
     template <typename RandIter>
     void sort(const RandIter l, const RandIter r) {
-        if (l == r || r - l == 1) return;
+        if (r - l <= 1) return;
         if (r - l <= INSERTION_THRES)
             return Insertion::sort(l, r);
         auto split = partition(l, r);

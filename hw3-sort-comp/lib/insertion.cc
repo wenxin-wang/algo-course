@@ -1,5 +1,3 @@
-#include <iterator>
-#include <utility>
 #include "common.hh"
 
 namespace Insertion {
