@@ -5,14 +5,23 @@
 #include <cstdint>
 #include <cstdlib>
 #include <ctime>
+#include <random>
 
 using namespace std;
 
 void usage(char **argv) {
-    cerr << argv[0] << "N input [output]"<< endl;
+    cerr << argv[0] << "N [input] [output]"<< endl;
     cerr << "N: size of uint32 list to be sorted"<< endl;
-    cerr << "input: list of uint32, one in each line"<< endl;
+    cerr << "input: list of uint32, one in each line. If no input, generate numbers randomly"<< endl;
     cerr << "output: sorted list of uint32, one in each line"<< endl;
+}
+
+void gen_numbers(vector<uint32_t> &v, long int N) {
+    random_device rd;
+    mt19937_64 generator{rd()};
+    std::uniform_int_distribution<unsigned> dist;
+    for (unsigned i = 0; i < N; i++)
+        v.push_back(dist(generator));
 }
 
 int read_file(vector<uint32_t> &v, char *name, long int N) {
@@ -53,21 +62,26 @@ int write_file(vector<uint32_t> &v, char *name) {
 }
 
 void test(void (*f)(VItr l, VItr r), int argc, char** argv) {
-    if (argc < 3) {
-        cerr << "input file is needed" << endl;
+    if (argc < 2) {
+        cerr << "N is needed" << endl;
         usage(argv);
         exit(1);
     }
     long int N = strtol(argv[1], NULL, 10);
     vector<uint32_t> v;
     v.reserve(N);
-    if (read_file(v, argv[2], N)) {
-        usage(argv);
-        exit(1);
+    if (argc >= 3) {
+        if (read_file(v, argv[2], N)) {
+            usage(argv);
+            exit(1);
+        }
     }
+    else
+        gen_numbers(v, N);
     clock_t start = clock();
     f(v.begin(), v.end());
-    cout << clock() - start << endl;
+    clock_t end = clock();
+    cout << end - start << endl;
     if (argc > 3) {
         if (write_file(v, argv[3])) {
             usage(argv);
