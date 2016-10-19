@@ -3,6 +3,7 @@ insertion
 quick-sort
 merge-sort
 radix-sort
+radix-sort-*[0-9]
 radix-sort-msbf
 shell-sort
 stl-sort

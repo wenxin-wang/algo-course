@@ -13,11 +13,17 @@ merge-sort: lib/merge.o lib/insertion.o $(LIBS)
 shell-sort: lib/shell.o lib/insertion.o $(LIBS)
 radix-sort: lib/radix.o $(LIBS)
 radix-sort-msbf: lib/radix.o $(LIBS)
+radix-sort-rs:
+	for i in {1..20}; do \
+		sed -i "s@\(SMALL_BITS = \)[0-9]*@\1$$i@" lib/radix.cc; \
+		make radix-sort; \
+		mv radix-sort radix-sort-$$i; \
+	done
 
 .PHONY: clean install
 
 clean:
-	rm -f *.d *.o lib/*.o lib/*.d $(BINS)
+	rm -f *.d *.o lib/*.o lib/*.d $(BINS) radix-sort-*[0-9]
 
 include $(subst .cc,.d,$(src))
 
