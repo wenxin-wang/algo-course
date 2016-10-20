@@ -5,7 +5,6 @@ from subprocess import check_output
 import filecmp
 import sys
 import os
-from collections import OrderedDict
 
 
 def gen(N, name):
@@ -60,30 +59,57 @@ def run(sort, runs):
     results = []
     print(sort)
     for N, times in runs:
+        print(N, times)
         for _ in range(0, times):
             res = [N, int(check_output(["./" + sort, str(N)]))]
-            print(res)
             results.append(res)
     return pd.DataFrame(results, columns=(["N", sort])).groupby(["N"]).mean()
 
 
 def run_all(sorts, name):
-    results = [run(sort, runs) for sort, runs in sorts.items()]
+    results = [run(sort, runs) for sort, runs in sorts]
     df = pd.concat(results, axis=1)
     df.to_csv(os.path.join("instance", name))
     print(df)
     return df
 
 
-long_runs = [(10, 10), (100, 10)]
-short_runs = [(10, 10), (100, 10)]
-#middle_runs = [(10, 10), (100, 10)]
-ts = ["stl-sort", "insertion", "quick-sort", "merge-sort", "shell-sort",
-      "radix-sort"]
-sorts = [
-    ("stl-sort", long_runs),
-    ("insertion", short_runs),
-    ("quick-sort", long_runs),
-    ("merge-sort", long_runs),
-    ("radix-sort", long_runs)]
-res = run_all(OrderedDict(sorts), "short-time.csv")
+def range_2(k):
+    res = []
+    for i in range(1, k+1):
+        gap = 2**(i-1) // i
+        top = 2**i
+        res += [2**i - (j-1) * gap for j in range(i, 0, -1)]
+    return res
+
+
+def comp_radix(r):
+    sorts = [("radix-sort-1", zip(range_2(r), [1000] * (r*(r+1)//2)))] + [
+        ("radix-sort-%d" % k, zip(range_2(k), [1000] * (k*(k+1)//2)))
+        for k in range(2, r+1)
+    ]
+    run_all(sorts, "radix-to-%d.csv" % r)
+
+
+def comp_sorts():
+    #short_runs = [(10, 500), (10**2, 500), (10**3, 500), (10**4, 500), (10**5, 100)]
+    short_runs = []
+    #insertion_runs = short_runs + [(4*10**5, 3), (6*10**5, 3)]
+    #med_runs = short_runs + [(10**6, 100), (10**7, 100)]
+    med_runs = short_runs + [(4*10**5, 3), (6*10**5, 3)]
+    #med_runs = [(10**8, 3), (2*10**8, 3)]
+    #long_runs = med_runs + [(10**9, 3)]
+    long_runs = med_runs + []
+    sorts = [
+        ("stl-sort", long_runs),
+        #("insertion", insertion_runs),
+        ("shell-sort", med_runs),
+        ("quick-sort", long_runs),
+        ("merge-sort", long_runs),
+        ("radix-sort", long_runs)
+    ]
+    run_all(sorts, "supper-time.csv")
+
+#comp_radix(10)
+#print(run("shell-sort", [(2*10**8, 1)]))
+comp_sorts()

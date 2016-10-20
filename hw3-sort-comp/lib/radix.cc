@@ -5,7 +5,7 @@
 
 namespace Radix {
     const unsigned INT_BITS = 32;
-    const unsigned SMALL_BITS = 10;
+    const unsigned SMALL_BITS = 6;
 
     typedef unsigned (*CKEY)(uint32_t x, const unsigned i, const unsigned bits);
 
