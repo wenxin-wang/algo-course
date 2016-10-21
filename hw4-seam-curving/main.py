@@ -2,8 +2,12 @@ import numpy as np
 from PIL import Image
 import sys
 import random
-from collections import deque
 import time
+
+import numpy as np
+import matplotlib as mpl
+mpl.use('TkAgg')
+import matplotlib.pyplot as plt
 
 
 def usage():
@@ -32,15 +36,15 @@ def cost(img):
     return c // div
 
 
-def rand_least(l):
+def rand_least(r, i, j):
     idx = [0]
-    small = l[0]
-    for i in range(1, len(l)):
-        if l[i] < small:
-            small = l[i]
-            idx = [i]
-        elif l[i] == small:
-            idx.append(i)
+    small = r[i]
+    for t in range(i+1, j+1):
+        if r[t] < small:
+            small = r[t]
+            idx = [t-i]
+        elif r[t] == small:
+            idx.append(t-i)
     return random.choice(idx)
 
 
@@ -48,39 +52,29 @@ def least_cost_r(r, b):
     n = len(r)
     if n <= 1:
         return r[0]
-    small = r[0]
-    idx = 0
-    l = deque(r[0:2])
-    b[0] = rand_least(l)
-    l.append(r[2])
-    b[1] = rand_least(l) - 1
-    for i in range(2, n-1):
-        l.popleft()
-        l.append(r[i+1])
-        b[i] = rand_least(l) - 1
-    l.popleft()
-    b[n-1] = rand_least(l) - 1
+    b[0] = rand_least(r, 0, 1)
+    b[1] = rand_least(r, 0, 2) - 1
+    for i in range(2, n - 1):
+        b[i] = rand_least(r, i - 1, i + 1) - 1
+    b[n - 1] = rand_least(r, n - 2, n - 1) - 1
 
 
 def curve_r(img, best):
-    _s = time.clock()
     c = cost(img)
-    print("Cost", time.clock() - _s)
+    #plt.imshow(c, cmap="binary")
+    #plt.show()
     m, n = c.shape
     _s = time.clock()
     for i in range(1, m):
         least_cost_r(c[i - 1, :], best[i, :])
-        for j in range(1, n):
+        for j in range(0, n):
             c[i, j] += c[i - 1, j + best[i, j]]
-    print("DP", time.clock() - _s)
-    _s = time.clock()
     keep = np.ones(img.shape, dtype=bool)
     idx = c[-1, :].argmin()
     keep[-1, idx, :] = False
     for i in range(m - 1, 0, -1):
         idx += best[i, idx]
         keep[i - 1, idx, :] = False
-    print("backtrack", time.clock() - _s)
     return img[keep].reshape(m, n-1, 3)
 
 
@@ -95,24 +89,13 @@ def seam_curing(img):
         ni = n // m
         run = m // 2
     best = np.zeros((max(m, n), max(m, n)), dtype='int8')
-    run = 10
-    ni = 1
-    mi = 1
     for _ in range(0, run):
         for _ in range(0, ni):
-            _s = time.clock()
             img = curve_r(img, best)
-            print("n", time.clock() - _s)
-        _s = time.clock()
         img = img.transpose(1, 0, 2)
-        print("T", time.clock() - _s)
         for _ in range(0, mi):
-            _s = time.clock()
             img = curve_r(img, best)
-            print("m", time.clock() - _s)
-        _s = time.clock()
         img = img.transpose(1, 0, 2)
-        print("T", time.clock() - _s)
     return img
 
 
