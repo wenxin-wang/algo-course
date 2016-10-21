@@ -64,11 +64,12 @@ def curve_r(img, best):
     #plt.imshow(c, cmap="binary")
     #plt.show()
     m, n = c.shape
-    _s = time.clock()
+    #_s = time.clock()
     for i in range(1, m):
         least_cost_r(c[i - 1, :], best[i, :])
         for j in range(0, n):
             c[i, j] += c[i - 1, j + best[i, j]]
+    #print("DP", time.clock() - _s)
     keep = np.ones(img.shape, dtype=bool)
     idx = c[-1, :].argmin()
     keep[-1, idx, :] = False
@@ -80,22 +81,13 @@ def curve_r(img, best):
 
 def seam_curing(img):
     m, n, _ = img.shape
-    if m > n:
-        mi = m // n
-        ni = 1
-        run = n // 2
-    else:
-        mi = 1
-        ni = n // m
-        run = m // 2
     best = np.zeros((max(m, n), max(m, n)), dtype='int8')
-    for _ in range(0, run):
-        for _ in range(0, ni):
-            img = curve_r(img, best)
-        img = img.transpose(1, 0, 2)
-        for _ in range(0, mi):
-            img = curve_r(img, best)
-        img = img.transpose(1, 0, 2)
+    for _ in range(0, n // 2):
+        img = curve_r(img, best)
+    img = img.transpose(1, 0, 2)
+    for _ in range(0, m // 2):
+        img = curve_r(img, best)
+    img = img.transpose(1, 0, 2)
     return img
 
 
